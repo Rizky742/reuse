@@ -11,7 +11,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () {
-      Get.to(() => const LoginPage()); // Navigasi ke halaman berikutnya
+      Get.toNamed('/login'); // Navigasi ke halaman berikutnya
     });
 
     return Scaffold(
@@ -32,6 +32,7 @@ class SplashScreen extends StatelessWidget {
               style: heading1.copyWith(color: Colors.white),
             ),
           ),
+          
         ],
       )),
     );

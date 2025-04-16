@@ -72,7 +72,7 @@ class LoginPage extends StatelessWidget {
                 ),
                 CustomButton(
                   title: "Login",
-                  onTap: () => Get.to(() => const HomePage()),
+                  onTap: () => Get.toNamed('/home'),
                 ),
                 SizedBox(
                   height: 21.h,
