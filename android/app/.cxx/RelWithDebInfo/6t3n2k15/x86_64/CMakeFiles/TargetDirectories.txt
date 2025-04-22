@@ -1,0 +1,2 @@
+/Users/macbook2/Documents/kuliah/pemrograman mobile praktikum/reuse/android/app/.cxx/RelWithDebInfo/6t3n2k15/x86_64/CMakeFiles/edit_cache.dir
+/Users/macbook2/Documents/kuliah/pemrograman mobile praktikum/reuse/android/app/.cxx/RelWithDebInfo/6t3n2k15/x86_64/CMakeFiles/rebuild_cache.dir

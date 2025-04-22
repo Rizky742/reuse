@@ -3,15 +3,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:reuse/theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:reuse/view/login_page.dart';
+import 'package:reuse/services/auth_service.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 3), () {
-      Get.toNamed('/login'); // Navigasi ke halaman berikutnya
+    Future.delayed(const Duration(seconds: 3), () async {
+      final isLoggedIn = await AuthService.isLoggedIn();
+      if (isLoggedIn) {
+        Get.offAllNamed('/home');
+      } else {
+        Get.offAllNamed('/login');
+      }
     });
 
     return Scaffold(
@@ -32,7 +37,6 @@ class SplashScreen extends StatelessWidget {
               style: heading1.copyWith(color: Colors.white),
             ),
           ),
-          
         ],
       )),
     );

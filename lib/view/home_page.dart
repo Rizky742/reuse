@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reuse/theme.dart';
-import 'package:reuse/view/cart_page.dart';
+import 'package:reuse/view/exchange_page.dart';
+import 'package:reuse/view/impact_page.dart';
+import 'package:reuse/view/news_page.dart';
 import 'package:reuse/view/product_page.dart';
+import 'package:reuse/view/profile_page.dart';
 import 'package:reuse/widgets/header_home.dart';
 import 'package:reuse/widgets/product_card.dart';
 import 'package:get/get.dart';
+import 'package:reuse/services/auth_service.dart';
+import 'package:reuse/models/product.dart';
 
 final List<String> categories = [
   "All",
@@ -50,11 +55,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  // Halaman yang ditampilkan di BottomNavigationBar
   final List<Widget> _pages = [
-    const HomeScreen(),     // Halaman Beranda
-    const CartPage(), // Halaman Favorit
-    const ProfileScreen(),  // Halaman Profil
+    const HomeScreen(), 
+    const ExchangePage(), 
+    const NewsPage(),
+    const ImpactPage(),
+    const ProfileScreen(), 
   ];
 
   void _onItemTapped(int index) {
@@ -76,25 +82,41 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: primary,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
+        type: BottomNavigationBarType.fixed,
         items: [
           const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Beranda',
           ),
-         BottomNavigationBarItem(
-  icon: SizedBox(
-    height: 24, // atau sesuaikan dengan kebutuhanmu
-    width: 24,
-    child: SvgPicture.asset(
-      'assets/cart_logo.svg',
-      colorFilter: ColorFilter.mode(
-        _selectedIndex == 1 ? primary : Colors.grey, // warnai sesuai status terpilih
-        BlendMode.srcIn,
-      ),
-    ),
-  ),
-  label: 'Cart',
-),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              height: 24,
+              width: 24,
+              child: Icon(
+                Icons.swap_horiz,
+                color: _selectedIndex == 1 ? primary : Colors.grey,
+              ),
+            ),
+            label: 'Exchange',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.article),
+            label: 'News',
+          ),
+          BottomNavigationBarItem(
+            icon: SizedBox(
+              height: 24,
+              width: 24,
+              child: SvgPicture.asset(
+                'assets/impact.svg',
+                colorFilter: ColorFilter.mode(
+                  _selectedIndex == 3 ? primary : Colors.grey,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+            label: 'Impact',
+          ),
           const BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profil',
@@ -175,7 +197,6 @@ class HomeScreen extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-
                         label: Text(categories[index]),
                         selected: false, // Menggunakan logika kategorinya
                         selectedColor: primary,
@@ -206,7 +227,13 @@ class HomeScreen extends StatelessWidget {
                   final product = products[index];
                   return GestureDetector(
                     onTap: () {
-                      Get.to(() => const ProductPage());
+                      Get.to(() => ProductPage(
+                        product: Product(
+                          name: product["title"],
+                          image: product["imageUrl"],
+                          price: product["price"],
+                        ),
+                      ));
                     },
                     child: ProductCard(
                       imageUrl: product["imageUrl"],
@@ -230,105 +257,5 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: Text("Halaman Favorit"));
-  }
-}
-
-
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Profile Picture
-            CircleAvatar(
-              radius: 50.r,
-              backgroundImage: NetworkImage(
-                'https://i.pravatar.cc/150?img=3', // ganti dengan image dari user
-              ),
-            ),
-            SizedBox(height: 16.h),
-
-            // User Info
-            Text(
-              'Nama Pengguna',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 4.h),
-            Text(
-              'user@example.com',
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 24.h),
-
-            // Menu List
-            Column(
-              children: [
-                buildProfileMenuItem(
-                  icon: Icons.person,
-                  title: 'Edit Profil',
-                  onTap: () {
-                    // Aksi edit profil
-                  },
-                ),
-                buildProfileMenuItem(
-                  icon: Icons.history,
-                  title: 'Riwayat Pemesanan',
-                  onTap: () {
-                    // Aksi buka riwayat
-                  },
-                ),
-                buildProfileMenuItem(
-                  icon: Icons.settings,
-                  title: 'Pengaturan',
-                  onTap: () {
-                    // Aksi pengaturan
-                  },
-                ),
-                buildProfileMenuItem(
-                  icon: Icons.logout,
-                  title: 'Keluar',
-                  onTap: () {
-                    // Aksi logout
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildProfileMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
-      child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          side: BorderSide(color: Colors.grey.shade300),
-        ),
-        leading: Icon(icon, color: primary),
-        title: Text(title),
-        trailing: Icon(Icons.arrow_forward_ios, size: 16.w),
-        onTap: onTap,
-      ),
-    );
   }
 }

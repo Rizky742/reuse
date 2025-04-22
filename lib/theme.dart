@@ -18,6 +18,7 @@ TextStyle body3 = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w500, 
 TextStyle caption1 = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 15.sp);
 TextStyle caption2 = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 12.sp);
 TextStyle caption3 = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 10.sp);
+TextStyle caption4 = TextStyle(fontFamily: 'Poppins', fontWeight: FontWeight.w300, fontSize: 8.sp);
 
 FontWeight light = FontWeight.w300;
 FontWeight medium = FontWeight.w500;

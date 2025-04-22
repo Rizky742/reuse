@@ -5,8 +5,8 @@ import 'package:reuse/widgets/auth_field.dart';
 import 'package:reuse/widgets/custom_button.dart';
 import 'package:reuse/theme.dart';
 import 'package:get/get.dart';
-import 'package:reuse/view/home_page.dart';
 import 'package:reuse/view/sign_up_page.dart';
+import 'package:reuse/services/auth_service.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -72,7 +72,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 CustomButton(
                   title: "Login",
-                  onTap: () => Get.toNamed('/home'),
+                  onTap: () async {
+                    await AuthService.setLoggedIn(true);
+                    Get.offAllNamed('/home');
+                  },
                 ),
                 SizedBox(
                   height: 21.h,
@@ -107,11 +110,11 @@ class LoginPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don’t have an account?",
+                      "Don't have an account?",
                       style: caption2.copyWith(color: Colors.grey),
                     ),
                     InkWell(
-                      onTap: () => Get.to(() => const SignUpPage()),
+                      onTap: () => Get.toNamed('/signup'),
                       child: Text(
                         "Sign Up",
                         style: caption2.copyWith(
@@ -136,11 +139,11 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        'assets/google_logo.svg', // Pastikan path ini benar
+                        'assets/google_logo.svg',
                         width: 20.w,
                         height: 20.w,
                       ),
-                      SizedBox(width: 8.w), // Spasi antara ikon dan teks
+                      SizedBox(width: 8.w),
                       Text(
                         "Google",
                         style: body1.copyWith(color: Colors.black),

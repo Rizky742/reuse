@@ -4,16 +4,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reuse/theme.dart';
 import 'package:get/get.dart';
 import 'package:reuse/view/cart_page.dart';
-import 'package:reuse/view/confirm_payment.dart';
+import 'package:reuse/view/create_exchange_offer_page.dart';
+import 'package:reuse/models/product.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  final Product product;
+
+  const ProductPage({
+    super.key,
+    required this.product,
+  });
 
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<ProductPage> {
+  String? selectedAction; // 'cart' atau 'exchange'
+
   int? selectedSize;
   Color? selectedColor;
 
@@ -31,7 +39,7 @@ class _ProductPageState extends State<ProductPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
         title: Row(
@@ -236,34 +244,66 @@ class _ProductPageState extends State<ProductPage> {
               SizedBox(height: 24.h),
 
               // Add to Cart Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                  onPressed: () {
-                    if (selectedSize == null || selectedColor == null) {
-                      Get.snackbar(
-                        'Pilih Dulu',
-                        'Silakan pilih ukuran dan warna produk.',
-                        backgroundColor: Colors.red.shade100,
-                        colorText: Colors.red,
-                      );
-                      return;
-                    }
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () {
+                        if (selectedSize == null || selectedColor == null) {
+                          Get.snackbar(
+                            'Pilih Dulu',
+                            'Silakan pilih ukuran dan warna produk.',
+                            backgroundColor: Colors.red.shade100,
+                            colorText: Colors.red,
+                          );
+                          return;
+                        }
 
-                    Get.to(() => const CartPage());
-                  },
-                  child: Text(
-                    "Add to Cart",
-                    style: body1.copyWith(color: Colors.white),
+                        setState(() {
+                          selectedAction = 'cart';
+                        });
+
+                        Get.to(() => const CartPage());
+                      },
+                      child: Text(
+                        "Add to Cart",
+                        style: body1.copyWith(color: Colors.white),
+                      ),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(() => CreateExchangeOfferPage(
+                          productName: widget.product.name,
+                          productImage: widget.product.image,
+                          productPrice: widget.product.price,
+                          selectedSize: selectedSize,
+                          selectedColor: selectedColor,
+                        ));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff00C49A),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      child: Text(
+                        "Exchange",
+                        style: body1.copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

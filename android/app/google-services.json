@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "515028757334",
+    "project_id": "reuse-app-project",
+    "storage_bucket": "reuse-app-project.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515028757334:android:ebf2150fa6da84d0ae04f7",
+        "android_client_info": {
+          "package_name": "com.example.reuse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqpfx7yvz8_CkojvJuwHrHDQfRPPYsVdM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
