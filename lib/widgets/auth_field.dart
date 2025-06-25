@@ -3,17 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:reuse/theme.dart';
 
 class AuthField extends StatelessWidget {
-  final String title; // Judul field (misal: "Email" atau "Password")
-  final String hintText; // Teks petunjuk (misal: "Masukkan email Anda")
-  final bool isPassword; // Apakah field ini untuk password?
-  final String? Function(String?)? validator; // Fungsi validasi
+  final String title;
+  final String hintText;
+  final bool isPassword;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller; // 👈 Add this line
 
   const AuthField({
     super.key,
     required this.title,
     required this.hintText,
-    this.isPassword = false, // Default false (untuk email)
-    this.validator, // Validator opsional
+    this.isPassword = false,
+    this.validator,
+    this.controller, // 👈 Add this line
   });
 
   @override
@@ -25,28 +27,26 @@ class AuthField extends StatelessWidget {
           title,
           style: heading3.copyWith(color: Colors.black, fontWeight: medium),
         ),
-        SizedBox(
-          height: 4.h,
-        ),
+        SizedBox(height: 4.h),
         TextFormField(
+          controller: controller, // 👈 Add this line
           style: caption2.copyWith(color: Colors.black),
-          obscureText: isPassword, // Menyembunyikan teks jika ini adalah password
+          obscureText: isPassword,
           decoration: InputDecoration(
             hintText: hintText,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6.r),
             ),
-            // Tambahkan ikon mata untuk password (opsional)
             suffixIcon: isPassword
                 ? IconButton(
                     icon: const Icon(Icons.visibility),
                     onPressed: () {
-                      // Tambahkan logika untuk toggle visibility
+                      // Optional: implement toggle visibility
                     },
                   )
                 : null,
           ),
-          validator: validator, // Validator untuk validasi input
+          validator: validator,
         ),
       ],
     );

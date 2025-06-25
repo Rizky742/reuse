@@ -11,8 +11,8 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 3), () async {
-      final isLoggedIn = await AuthService.isLoggedIn();
-      if (isLoggedIn) {
+      final auth = await AuthService.getUserFromPrefs(); 
+      if (auth != null) {
         Get.offAllNamed('/home');
       } else {
         Get.offAllNamed('/login');
@@ -22,23 +22,24 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: primary,
       body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(
-            'assets/main_logo.svg',
-            semanticsLabel: "woi",
-            width: 126.h,
-          ),
-          GestureDetector(
-            onTap: () => {},
-            child: Text(
-              'Reuse',
-              style: heading1.copyWith(color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/main_logo.svg',
+              semanticsLabel: "woi",
+              width: 126.h,
             ),
-          ),
-        ],
-      )),
+            GestureDetector(
+              onTap: () => {},
+              child: Text(
+                'Reuse',
+                style: heading1.copyWith(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

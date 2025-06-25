@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:reuse/controllers/exchange_controller.dart';
+import 'package:reuse/controllers/impact_controller.dart';
+import 'package:reuse/controllers/product_controller.dart';
 import 'package:reuse/theme.dart';
 import 'package:reuse/view/exchange_page.dart';
+import 'package:reuse/view/home_screen.dart';
 import 'package:reuse/view/impact_page.dart';
 import 'package:reuse/view/news_page.dart';
 import 'package:reuse/view/product_page.dart';
@@ -10,7 +14,6 @@ import 'package:reuse/view/profile_page.dart';
 import 'package:reuse/widgets/header_home.dart';
 import 'package:reuse/widgets/product_card.dart';
 import 'package:get/get.dart';
-import 'package:reuse/services/auth_service.dart';
 import 'package:reuse/models/product.dart';
 
 final List<String> categories = [
@@ -21,52 +24,48 @@ final List<String> categories = [
   "Roti & Kue"
 ];
 
-final List<Map<String, dynamic>> products = [
-  {
-    "imageUrl":
-        "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg",
-    "title": "Wood Spoon",
-    "subtitle": "sdafdasf",
-    "price": 900000.0
-  },
-  {
-    "imageUrl":
-        "https://images.pexels.com/photos/4066296/pexels-photo-4066296.jpeg",
-    "title": "Wood Spoon",
-    "subtitle": "sdafdasf",
-    "price": 45000.0
-  },
-  {
-    "imageUrl":
-        "https://images.pexels.com/photos/1666063/pexels-photo-1666063.jpeg",
-    "title": "Wood Spoon",
-    "subtitle": "sdafdasf",
-    "price": 20000.0
-  },
-];
-
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int initialIndex;
+  const HomePage({super.key, this.initialIndex = 0});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   final List<Widget> _pages = [
-    const HomeScreen(), 
-    const ExchangePage(), 
+    const HomeScreen(),
+    const ExchangePage(),
     const NewsPage(),
     const ImpactPage(),
-    const ProfileScreen(), 
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    if (index == 0) {
+      final productController = Get.find<ProductController>();
+      productController.getAllProducts();
+    }
+    if (index == 1) {
+      final exchangeController = Get.find<ExchangeController>();
+      exchangeController.getOffersMade();
+    }
+
+    if (index == 3) {
+      final impactController = Get.find<ImpactController>();
+      impactController.getMyImpact();
+    }
   }
 
   @override
@@ -122,131 +121,6 @@ class _HomePageState extends State<HomePage> {
             label: 'Profil',
           ),
         ],
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              SizedBox(height: 28.h),
-              const HeaderHome(),
-              SizedBox(height: 28.h),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Search Food",
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 12.h,
-                          horizontal: 16.w,
-                        ),
-                        prefixIcon: const Icon(Icons.search, color: primary),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: const BorderSide(color: Colors.grey),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: const BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.r),
-                          borderSide: const BorderSide(color: primary),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: primary,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    child: SvgPicture.asset(
-                      'assets/filter_logo.svg',
-                      width: 20.w,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 28.h),
-              SizedBox(
-                height: 40,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ChoiceChip(
-                        label: Text(categories[index]),
-                        selected: false, // Menggunakan logika kategorinya
-                        selectedColor: primary,
-                        onSelected: (bool selected) {},
-                        labelStyle: const TextStyle(
-                          color: Colors.white,
-                        ),
-                        backgroundColor: primary,
-                        shape: const StadiumBorder(
-                          side: BorderSide(color: primary),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 0.7,
-                ),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Get.to(() => ProductPage(
-                        product: Product(
-                          name: product["title"],
-                          image: product["imageUrl"],
-                          price: product["price"],
-                        ),
-                      ));
-                    },
-                    child: ProductCard(
-                      imageUrl: product["imageUrl"],
-                      title: product["title"],
-                      subtitle: product["subtitle"],
-                      price: product["price"],
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

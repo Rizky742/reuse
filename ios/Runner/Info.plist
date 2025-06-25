@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>io.flutter.experimental.impeller</key>
+	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to the photo library to pick images.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need access to the camera to take pictures.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -41,9 +47,28 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.YOUR-CLIENT-ID</string>
+				<string>https</string>
+				<string>http</string>
+				<string>tel</string>
+				<string>mailto</string>
+				<string>sms</string>
+				<string>whatsapp</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
